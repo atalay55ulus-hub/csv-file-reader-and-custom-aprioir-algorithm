@@ -81,3 +81,43 @@ for i in range(n):
 
         candidate_2.add(pair)
 print(f"\ntotal items in the candidate 2-itemsets are: {len(candidate_2)}")
+
+#starting the remaining cycles from where we were , like k = 2
+candidate = candidate_2
+k = 2 
+#hanging the varables to be able to fit for the apriori algorithms next moves
+while len(candidate) > 0:
+    #trying to count how many baskets contain each candidate
+    candina_count = {}
+    for cand in candidate:
+        candina_count[cand] = 0
+
+    for basket in transactions:
+        for cand in candidate:
+            if cand.issubset(basket):
+                candina_count[cand] += 1
+
+#min support filter as like in k=1
+Lks = {} # Lks cuz for late ks
+rejected_count = 0
+for cand, count in candina_count.items():
+    support = count / len(transactions)
+    if support >= min_support:
+        Lks[cand] = support
+    else:
+        rejected_count += 1
+
+# still need to do printd imma do them later 
+
+    #storing survived Lks itemsets
+    for itemset, support in Lks.items():
+        all_frequent[itemset] = support
+
+    #if the survive rate is 0 then we break the loop
+    if len(Lks) == 0:
+        break
+
+#making itemsets for the next loops
+lks_items = list(Lks.keys())
+next_candidates = set()
+n = len(lks_items) # n for next
